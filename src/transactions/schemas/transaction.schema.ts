@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { AgentRole, TransactionStatus } from 'src/types';
+import { AgentRole, TransactionStatus } from '../../types';
 import { Agent } from '../../agents/schemas/agents.schema';
 
 @Schema({ _id: false })
@@ -11,7 +11,7 @@ export class CommissionDistribution {
   @Prop({ required: true })
   agentName: string; // snapshot
 
-  @Prop({ required: true, enum: AgentRole })
+  @Prop({ required: true, enum: AgentRole, type: String })
   role: AgentRole;
 
   @Prop({ required: true })
@@ -52,6 +52,7 @@ export class Transaction {
     required: true,
     enum: TransactionStatus,
     default: TransactionStatus.AGREEMENT,
+    type: String,
   })
   status: TransactionStatus;
 

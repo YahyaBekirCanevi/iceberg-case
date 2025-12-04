@@ -9,17 +9,17 @@ import {
   Post,
 } from '@nestjs/common';
 import { AgentService } from './agents.service';
-import { CreateAgentDto } from './dto/CreateAgent.dto';
+import { CreateAgentDto } from './dto/create-agent.dto';
 import mongoose from 'mongoose';
-import { UpdateAgentDto } from './dto/UpdateAgent.dto';
+import { UpdateAgentDto } from './dto/update-agent.dto';
 
 @Controller('agents')
 export class AgentsController {
   constructor(private service: AgentService) {}
 
   @Post()
-  createAgent(@Body() createAgentDto: CreateAgentDto) {
-    const createdAgent = this.service.create(createAgentDto);
+  async createAgent(@Body() createAgentDto: CreateAgentDto) {
+    const createdAgent = await this.service.create(createAgentDto);
     if (!createdAgent) {
       throw new HttpException('Failed to create Agent', 400);
     }
@@ -27,17 +27,17 @@ export class AgentsController {
   }
 
   @Get()
-  getAll() {
-    return this.service.findAll();
+  async getAll() {
+    return await this.service.findAll();
   }
 
   @Get(':id')
-  getById(@Param('id') id: string) {
+  async getById(@Param('id') id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) {
       throw new HttpException('Agent not found', 404);
     }
-    const findAgent = this.service.findById(id);
+    const findAgent = await this.service.findById(id);
     if (!findAgent) {
       throw new HttpException('Agent not found', 404);
     }
@@ -45,20 +45,20 @@ export class AgentsController {
   }
 
   @Patch(':id')
-  updateById(@Param('id') id: string, @Body() updateAgentDto: UpdateAgentDto) {
+  async updateById(@Param('id') id: string, @Body() updateAgentDto: UpdateAgentDto) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) {
       throw new HttpException('Agent not found', 404);
     }
-    return this.service.update(id, updateAgentDto);
+    return await this.service.update(id, updateAgentDto);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
+  async delete(@Param('id') id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) {
       throw new HttpException('Agent not found', 404);
     }
-    this.service.delete(id);
+    await this.service.delete(id);
   }
 }
