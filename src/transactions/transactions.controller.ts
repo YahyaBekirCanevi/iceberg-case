@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionStatusDto } from './dto/update-transaction-status.dto';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Transaction, FinancialBreakdown } from './schemas/transaction.schema';
 
 @Controller('transactions')
@@ -34,6 +35,14 @@ export class TransactionsController {
       id,
       updateTransactionStatusDto,
     );
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateTransactionDto: UpdateTransactionDto,
+  ): Promise<Transaction> {
+    return this.transactionsService.update(id, updateTransactionDto);
   }
 
   @Get(':id/financials')

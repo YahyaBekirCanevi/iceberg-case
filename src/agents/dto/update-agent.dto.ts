@@ -5,10 +5,10 @@ export class UpdateAgentDto {
   @IsString()
   @IsOptional()
   @ApiProperty({ required: false })
-  name: string;
+  name?: string;
 
   @IsEmail()
   @IsOptional()
   @ApiProperty({ required: false })
-  email: string;
+  email?: string;
 }

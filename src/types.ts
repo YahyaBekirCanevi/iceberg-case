@@ -5,6 +5,13 @@ export enum TransactionStatus {
   COMPLETED = 'completed',
 }
 
+export const transactionStages = [
+  TransactionStatus.AGREEMENT,
+  TransactionStatus.EARNEST_MONEY,
+  TransactionStatus.TITLE_DEED,
+  TransactionStatus.COMPLETED,
+];
+
 export enum AgentRole {
   LISTING = 'listing',
   SELLING = 'selling',

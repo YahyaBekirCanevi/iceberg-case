@@ -13,7 +13,8 @@ import {
 } from './schemas/transaction.schema';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionStatusDto } from './dto/update-transaction-status.dto';
-import { TransactionStatus, AgentRole } from '../types';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { TransactionStatus, AgentRole, transactionStages } from '../types';
 import { Agent, AgentDocument } from '../agents/schemas/agents.schema';
 
 @Injectable()
@@ -89,19 +90,29 @@ export class TransactionsService {
     return transaction.save();
   }
 
+  async update(
+    id: string,
+    updateTransactionDto: UpdateTransactionDto,
+  ): Promise<Transaction> {
+    const transaction = await this.transactionModel.findByIdAndUpdate(
+      id,
+      updateTransactionDto,
+      { new: true },
+    );
+
+    if (!transaction) {
+      throw new NotFoundException(`Transaction with ID ${id} not found`);
+    }
+
+    return transaction;
+  }
+
   private validateTransition(
     current: TransactionStatus,
     next: TransactionStatus,
   ) {
-    const stages = [
-      TransactionStatus.AGREEMENT,
-      TransactionStatus.EARNEST_MONEY,
-      TransactionStatus.TITLE_DEED,
-      TransactionStatus.COMPLETED,
-    ];
-
-    const currentIndex = stages.indexOf(current);
-    const nextIndex = stages.indexOf(next);
+    const currentIndex = transactionStages.indexOf(current);
+    const nextIndex = transactionStages.indexOf(next);
 
     if (nextIndex <= currentIndex) {
       throw new BadRequestException(
