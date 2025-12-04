@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsString, IsBoolean, IsOptional } from 'class-validator';
 
 export class CreateAgentDto {
   @IsString()
@@ -9,6 +9,9 @@ export class CreateAgentDto {
   @IsEmail()
   @ApiProperty({ required: true })
   email: string;
-  
+
+  @IsBoolean()
+  @IsOptional()
+  @ApiProperty({ required: false, default: true })
   isActive: boolean = true;
 }
