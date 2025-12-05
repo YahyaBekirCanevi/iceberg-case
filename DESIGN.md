@@ -89,15 +89,42 @@ We chose the **embedded approach** for financial breakdown storage because:
 - `PATCH /transactions/:id/status`: Advance the stage of a transaction.
   - Body: `{ status: 'NEXT_STAGE' }`
 - `GET /transactions/:id/financials`: Retrieve the financial breakdown (only if completed).
+- `GET /transactions/:id/history`: Retrieve the history of status changes for a transaction.
 
 ## 5. Testing Strategy
 
-- **Unit Tests**: Focus on `TransactionsService`.
-  - Verify commission calculation logic for both scenarios (same agent vs different agents).
-  - Verify stage transition enforcement.
-- **Integration Tests**: Focus on `TransactionsController` and Database.
-  - Verify API endpoints work as expected.
-  - Verify data is correctly saved to MongoDB.
+We employ a comprehensive testing strategy covering both unit logic and end-to-end flows.
+
+### Unit Tests
+
+Located in `src/**/*.spec.ts`. These tests focus on isolated business logic within services.
+
+- **TransactionsService** (`src/transactions/transactions.service.spec.ts`):
+  - Verifies commission calculation rules (50% Agency, 50% Agent Pool).
+  - Validates split scenarios: Same agent (100% of pool) vs. Different agents (50/50 split).
+  - Enforces strict stage transitions (`AGREEMENT` -> `EARNEST_MONEY` -> `TITLE_DEED` -> `COMPLETED`).
+  - Ensures invalid transitions (skipping stages, moving backward) are rejected.
+
+- **AgentsService** (`src/agents/agents.service.spec.ts`):
+  - Verifies agent creation and retrieval logic.
+  - Ensures password hashing and validation.
+
+### End-to-End (E2E) Tests
+
+Located in `test/*.e2e-spec.ts`. These tests spin up the full NestJS application with a test database to verify the entire flow from HTTP request to database persistence.
+
+- **Transactions Flow** (`test/transactions.e2e-spec.ts`):
+  - Tests the full lifecycle of a transaction via API.
+  - Creates a transaction -> Updates status step-by-step -> Verifies `COMPLETED` state and financial breakdown in the response.
+
+- **Agents & Auth** (`test/agents-auth.e2e-spec.ts`, `test/agents.e2e-spec.ts`):
+  - Verifies Agent Registration (Sign Up).
+  - Verifies Login flow and JWT token generation.
+  - Tests protected routes using the generated token.
+  - Verifies Agent CRUD operations.
+
+- **App** (`test/app.e2e-spec.ts`):
+  - Basic health check and application bootstrap verification.
 
 ## 6. Most Challenging / Riskiest Part
 
