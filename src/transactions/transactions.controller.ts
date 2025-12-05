@@ -1,11 +1,24 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionStatusDto } from './dto/update-transaction-status.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Transaction, FinancialBreakdown } from './schemas/transaction.schema';
+import { TransactionHistory } from './schemas/transaction-history.schema';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('transactions')
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth('access-token')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
@@ -48,5 +61,10 @@ export class TransactionsController {
   @Get(':id/financials')
   async getFinancials(@Param('id') id: string): Promise<FinancialBreakdown> {
     return this.transactionsService.getFinancials(id);
+  }
+
+  @Get(':id/history')
+  async getHistory(@Param('id') id: string): Promise<TransactionHistory[]> {
+    return this.transactionsService.getHistory(id);
   }
 }

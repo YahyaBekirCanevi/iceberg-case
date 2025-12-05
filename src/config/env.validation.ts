@@ -31,6 +31,10 @@ class EnvironmentVariables {
 
   @IsString()
   DB_HOST: string;
+
+  @IsNumber()
+  @IsOptional()
+  AGENCY_SHARE_PERCENTAGE: number = 50; // Default 50%
 }
 
 export function validate(config: Record<string, unknown>) {

@@ -4,13 +4,18 @@ import { Agent } from './schemas/agents.schema';
 import { Model } from 'mongoose';
 import { CreateAgentDto } from './dto/create-agent.dto';
 import { UpdateAgentDto } from './dto/update-agent.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AgentService {
   constructor(@InjectModel(Agent.name) private agentModel: Model<Agent>) {}
 
   async create(createAgentDto: CreateAgentDto): Promise<Agent> {
-    const newAgent = new this.agentModel(createAgentDto);
+    const hashedPassword = await bcrypt.hash(createAgentDto.password, 10);
+    const newAgent = new this.agentModel({
+      ...createAgentDto,
+      password: hashedPassword,
+    });
     return newAgent.save();
   }
 

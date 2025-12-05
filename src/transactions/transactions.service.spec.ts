@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
+import { ConfigService } from '@nestjs/config';
 import { TransactionsService } from './transactions.service';
 import { Transaction } from './schemas/transaction.schema';
+import { TransactionHistory } from './schemas/transaction-history.schema';
 import { Agent } from '../agents/schemas/agents.schema';
 import { TransactionStatus, AgentRole } from '../types';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
@@ -47,6 +49,19 @@ class MockAgentModel {
   static findById = jest.fn();
 }
 
+class MockTransactionHistoryModel {
+  constructor(public data: any) {
+    Object.assign(this, data);
+  }
+  save = jest.fn().mockImplementation(() => Promise.resolve(this));
+  static create = jest.fn();
+  static find = jest.fn();
+}
+
+const mockConfigService = {
+  get: jest.fn(),
+};
+
 describe('TransactionsService', () => {
   let service: TransactionsService;
   let transactionModel: any;
@@ -63,6 +78,14 @@ describe('TransactionsService', () => {
         {
           provide: getModelToken(Agent.name),
           useValue: MockAgentModel,
+        },
+        {
+          provide: getModelToken(TransactionHistory.name),
+          useValue: MockTransactionHistoryModel,
+        },
+        {
+          provide: ConfigService,
+          useValue: mockConfigService,
         },
       ],
     }).compile();

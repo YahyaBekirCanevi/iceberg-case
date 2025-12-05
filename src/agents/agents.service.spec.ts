@@ -52,6 +52,7 @@ describe('AgentService', () => {
       const createAgentDto: CreateAgentDto = {
         name: 'Test Agent',
         email: 'test@example.com',
+        password: 'password',
         isActive: true,
       };
 

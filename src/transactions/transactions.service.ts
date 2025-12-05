@@ -5,12 +5,17 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ConfigService } from '@nestjs/config';
 import {
   Transaction,
   TransactionDocument,
   FinancialBreakdown,
   CommissionDistribution,
 } from './schemas/transaction.schema';
+import {
+  TransactionHistory,
+  TransactionHistoryDocument,
+} from './schemas/transaction-history.schema';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionStatusDto } from './dto/update-transaction-status.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
@@ -21,8 +26,12 @@ import { Agent, AgentDocument } from '../agents/schemas/agents.schema';
 export class TransactionsService {
   constructor(
     @InjectModel(Transaction.name)
+    @InjectModel(Transaction.name)
     private transactionModel: Model<TransactionDocument>,
+    @InjectModel(TransactionHistory.name)
+    private historyModel: Model<TransactionHistoryDocument>,
     @InjectModel(Agent.name) private agentModel: Model<AgentDocument>,
+    private configService: ConfigService,
   ) {}
 
   async create(
@@ -82,6 +91,13 @@ export class TransactionsService {
     this.validateTransition(currentStatus, newStatus);
 
     transaction.status = newStatus;
+
+    // Create History Record
+    await this.historyModel.create({
+      transactionId: transaction._id,
+      previousStatus: currentStatus,
+      newStatus: newStatus,
+    });
 
     if (newStatus === TransactionStatus.COMPLETED) {
       await this.calculateFinancials(transaction);
@@ -189,5 +205,12 @@ export class TransactionsService {
       );
     }
     return transaction.financialBreakdown;
+  }
+
+  async getHistory(id: string): Promise<TransactionHistory[]> {
+    return this.historyModel
+      .find({ transactionId: id })
+      .sort({ createdAt: -1 })
+      .exec();
   }
 }

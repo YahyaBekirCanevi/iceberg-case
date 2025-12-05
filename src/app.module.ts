@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AgentsModule } from './agents/agents.module';
 import { TransactionsModule } from './transactions/transactions.module';
+import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validate } from './config/env.validation';
 import { AppController } from './app.controller';
@@ -21,6 +22,7 @@ import { AppController } from './app.controller';
     }),
     AgentsModule,
     TransactionsModule,
+    AuthModule,
   ],
   controllers: [AppController],
 })
