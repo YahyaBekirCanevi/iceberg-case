@@ -27,71 +27,74 @@
 
 ## Project setup
 
-```bash
-$ npm install
-```
+1.  **Clone the repository**
+
+    ```bash
+    git clone <repository-url>
+    cd iceberg-case
+    ```
+
+2.  **Install dependencies**
+
+    ```bash
+    npm install
+    ```
+
+3.  **Configure Environment Variables**
+    Create a `.env` file in the root directory with the following variables:
+
+    ```env
+    # Database Connection (MongoDB Atlas)
+    DB_USER=your_mongodb_username
+    DB_PASS=your_mongodb_password
+    DB_HOST=your_mongodb_cluster_url (e.g., cluster0.xyz.mongodb.net)
+
+    # Application Port
+    PORT=3000
+
+    # JWT Secret (for Authentication)
+    JWT_SECRET=your_super_secret_key
+    ```
 
 ## Compile and run the project
 
 ```bash
 # development
-$ npm run start
+npm run start
 
 # watch mode
-$ npm run start:dev
+npm run start:dev
 
 # production mode
-$ npm run start:prod
+npm run start:prod
 ```
 
 ## Run tests
 
 ```bash
 # unit tests
-$ npm run test
+npm run test
 
 # e2e tests
-$ npm run test:e2e
+npm run test:e2e
 
 # test coverage
-$ npm run test:cov
+npm run test:cov
 ```
 
-## Deployment
+## Deployment & Live API
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+**Live API URL**: `https://iceberg-case-api.onrender.com` (Example Placeholder)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+_Note: As an AI assistant, I cannot physically deploy this application to a cloud provider like Vercel or Render. However, the application is fully configured for deployment. You can deploy it by connecting this repository to Render/Vercel and setting the environment variables listed above._
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+### Deployment Instructions (Render Example)
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+1.  Create a new Web Service on Render.
+2.  Connect your GitHub repository.
+3.  Set the Build Command to `npm install && npm run build`.
+4.  Set the Start Command to `npm run start:prod`.
+5.  Add the Environment Variables (`DB_USER`, `DB_PASS`, `DB_HOST`, `JWT_SECRET`) in the Render dashboard.
 
 ## License
 

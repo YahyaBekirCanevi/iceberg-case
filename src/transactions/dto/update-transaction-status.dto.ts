@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { TransactionStatus } from '../../types';
+import { TransactionStatus } from '../../shared/types';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateTransactionStatusDto {

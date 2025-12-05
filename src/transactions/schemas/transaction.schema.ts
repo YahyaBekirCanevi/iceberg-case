@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { AgentRole, TransactionStatus } from '../../types';
+import { AgentRole, TransactionStatus } from '../../shared/types';
 import { Agent } from '../../agents/schemas/agents.schema';
 
 @Schema({ _id: false })

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { TransactionStatus } from '../../types';
+import { TransactionStatus } from '../../shared/types';
 
 @Schema({ timestamps: true })
 export class TransactionHistory {

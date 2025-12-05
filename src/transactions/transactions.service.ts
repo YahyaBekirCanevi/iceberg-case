@@ -19,7 +19,11 @@ import {
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionStatusDto } from './dto/update-transaction-status.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import { TransactionStatus, AgentRole, transactionStages } from '../types';
+import {
+  TransactionStatus,
+  AgentRole,
+  transactionStages,
+} from '../shared/types';
 import { Agent, AgentDocument } from '../agents/schemas/agents.schema';
 
 @Injectable()

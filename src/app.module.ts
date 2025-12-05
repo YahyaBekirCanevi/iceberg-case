@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AgentsModule } from './agents/agents.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { AuthModule } from './auth/auth.module';
+import { SharedModule } from './shared/shared.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validate } from './config/env.validation';
 import { AppController } from './app.controller';
@@ -23,6 +24,7 @@ import { AppController } from './app.controller';
     AgentsModule,
     TransactionsModule,
     AuthModule,
+    SharedModule,
   ],
   controllers: [AppController],
 })

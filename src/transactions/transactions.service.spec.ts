@@ -5,7 +5,7 @@ import { TransactionsService } from './transactions.service';
 import { Transaction } from './schemas/transaction.schema';
 import { TransactionHistory } from './schemas/transaction-history.schema';
 import { Agent } from '../agents/schemas/agents.schema';
-import { TransactionStatus, AgentRole } from '../types';
+import { TransactionStatus, AgentRole } from '../shared/types';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 
 const mockTransaction = {

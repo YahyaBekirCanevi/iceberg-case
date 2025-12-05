@@ -5,6 +5,9 @@
 The application is structured into the following modules to ensure separation of concerns and scalability:
 
 - **AppModule**: The root module that orchestrates the application.
+- **AuthModule**: Handles authentication and authorization (JWT, Login).
+  - `AuthController`: Manages login endpoints.
+  - `AuthService`: Handles password validation and token generation.
 - **TransactionsModule**: Handles the core business logic for transaction lifecycle management.
   - `TransactionsController`: Exposes RESTful endpoints for transaction operations.
   - `TransactionsService`: Contains business logic for state transitions and data persistence.
@@ -13,7 +16,9 @@ The application is structured into the following modules to ensure separation of
   - `AgentsController`: Manages agent operations.
   - `AgentsService`: Handles agent logic.
   - `AgentSchema`: Defines agent data model.
-- **SharedModule** (Optional/Implicit): Common types and utilities (e.g., `TransactionStatus`, `AgentRole`).
+- **SharedModule**: Encapsulates shared resources used across the application to avoid circular dependencies and promote reusability.
+  - `types.ts`: Shared enums and interfaces (e.g., `TransactionStatus`, `AgentRole`).
+  - `filters`: Global exception filters (e.g., `AllExceptionsFilter`).
 
 ## 2. Database Schema Design
 
@@ -71,6 +76,13 @@ We chose the **embedded approach** for financial breakdown storage because:
 
 ### Endpoints
 
+#### Auth & Agents
+
+- `POST /agents`: Create a new agent (Sign Up).
+- `POST /auth/login`: Login and retrieve JWT token.
+
+#### Transactions
+
 - `POST /transactions`: Create a new transaction (starts at `AGREEMENT`).
 - `GET /transactions`: List all transactions.
 - `GET /transactions/:id`: Get details of a specific transaction.
@@ -86,3 +98,52 @@ We chose the **embedded approach** for financial breakdown storage because:
 - **Integration Tests**: Focus on `TransactionsController` and Database.
   - Verify API endpoints work as expected.
   - Verify data is correctly saved to MongoDB.
+
+## 6. Most Challenging / Riskiest Part
+
+### Challenge: Financial Breakdown Immutability vs. Data Integrity
+
+The most critical design decision was how to store the financial breakdown.
+
+- **Risk**: Calculating commissions dynamically every time (on read) risks inconsistency if agent details (e.g., commission rates, roles) change in the future.
+- **Mitigation**: We chose the **Snapshot Pattern**.
+  - When a transaction is `COMPLETED`, we calculate the financials _once_ and store them as an embedded document within the transaction.
+  - This ensures that historical financial records remain accurate even if business rules or agent details change later.
+  - We also store the `agentName` at the time of the transaction to preserve the historical context.
+
+## 7. What to Improve in the Future
+
+### 1. Audit Logging
+
+- **Why**: In financial systems, "who changed what and when" is crucial.
+- **Next Step**: Implement a dedicated `AuditLog` collection that tracks every state change, user action, and sensitive data modification.
+
+### 2. Role-Based Access Control (RBAC)
+
+- **Why**: Currently, the system likely allows broad access. In reality, only admins should be able to approve `COMPLETED` status or view sensitive financial breakdowns.
+- **Next Step**: Implement Guards and Decorators (e.g., `@Roles('ADMIN')`) to restrict sensitive endpoints.
+
+### 3. Reporting & Analytics Module
+
+- **Why**: The current system stores data but doesn't aggregate it.
+- **Next Step**: Create a separate module for generating monthly reports, agent performance metrics, and agency revenue dashboards using MongoDB Aggregation Framework.
+
+### 4. Notification System
+
+- **Why**: Stakeholders need to know when a transaction moves to the next stage.
+- **Next Step**: Integrate an event emitter system (e.g., `EventEmitter2`) to send emails or push notifications on status changes.
+
+### 5. Pagination & Filtering
+
+- **Why**: As the number of transactions grows, fetching all of them (`GET /transactions`) will become slow and inefficient.
+- **Next Step**: Implement pagination (limit/offset or cursor-based) and filtering (by status, date range, agent) for list endpoints.
+
+### 6. Rate Limiting & Security
+
+- **Why**: To protect the API from abuse and denial-of-service attacks.
+- **Next Step**: Implement `ThrottlerModule` to limit the number of requests per IP/User.
+
+### 7. CI/CD Pipeline
+
+- **Why**: To ensure code quality and automate deployments.
+- **Next Step**: Set up GitHub Actions or GitLab CI to run tests automatically on PRs and deploy to staging/production on merge.
