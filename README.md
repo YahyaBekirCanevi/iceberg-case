@@ -30,7 +30,7 @@
 1.  **Clone the repository**
 
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/YahyaBekirCanevi/iceberg-case.git
     cd iceberg-case
     ```
 
@@ -45,15 +45,15 @@
 
     ```env
     # Database Connection (MongoDB Atlas)
-    DB_USER=your_mongodb_username
-    DB_PASS=your_mongodb_password
-    DB_HOST=your_mongodb_cluster_url (e.g., cluster0.xyz.mongodb.net)
+    DB_USER="yahyabekircanevi2_db_user"
+    DB_PASS=(your_mongodb_password)
+    DB_HOST="cluster0.o7yh1ar.mongodb.net/?appName=Cluster0"
 
     # Application Port
     PORT=3000
 
     # JWT Secret (for Authentication)
-    JWT_SECRET=your_super_secret_key
+    JWT_SECRET=(your_super_secret_key)
     ```
 
 ## Compile and run the project
@@ -84,7 +84,7 @@ npm run test:cov
 
 ## Deployment & Live API
 
-**Live API URL**: `https://iceberg-case.onrender.com`
+**Live API URL**: [https://iceberg-case.onrender.com](https://iceberg-case.onrender.com)
 
 ### Deployment Instructions (Render Example)
 
