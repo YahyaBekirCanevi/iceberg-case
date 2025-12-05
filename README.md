@@ -84,9 +84,7 @@ npm run test:cov
 
 ## Deployment & Live API
 
-**Live API URL**: `https://iceberg-case-api.onrender.com` (Example Placeholder)
-
-_Note: As an AI assistant, I cannot physically deploy this application to a cloud provider like Vercel or Render. However, the application is fully configured for deployment. You can deploy it by connecting this repository to Render/Vercel and setting the environment variables listed above._
+**Live API URL**: `https://iceberg-case.onrender.com`
 
 ### Deployment Instructions (Render Example)
 
